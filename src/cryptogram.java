@@ -1,74 +1,74 @@
 
 
-//welcome to Dan's cryptogram object. Rough draft.
+// I have commented out placeHolder because I may not need it.
 public class cryptogram {
-	private String original, scrambled; 
+	String original, scrambled, placeHolder;
 
-	// constructor makes a new cryptogram object from a string input 
-	// but does not scramble it yet.
+
+
+
 	public cryptogram(String a){
-		original=a;
-		scrambled=a;
+		original=a.toUpperCase();
+		scrambled=a.toUpperCase();
+		placeHolder=scrambled;
+
+
 	}
-	//creates scrambled from original 
+	//creates scrambled from original
 	public void scrambler(){
-		String alphabet="abcdefghijklmnopqrstuvwxyz";
-		String usedLetters="";
+		String alphabet1="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String alphabet2="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		double randomNumberMultiplier=25.999;
 		for(int i=0; i<=25; i++){
-			int randomInt=(int) (25.999*Math.random());
-			if(randomInt==i){
+
+			int randomInt=(int) (randomNumberMultiplier*Math.random());
+			if(alphabet1.substring(i, i+1).equals(alphabet2.substring(randomInt,randomInt+1))){
 				i--;
 				continue;
 			}
-
-			if(usedLetters.contains(alphabet.substring(randomInt,randomInt+1))){
-				i--;
-				continue;
-			}
-
-			usedLetters=usedLetters+alphabet.substring(randomInt,randomInt+1);
 			int position=0;
 			while(original.length()>position){
-				position=search(original,alphabet.substring(i,i+1),position);
+				position=original.indexOf(alphabet1.substring(i,i+1),position);
 				if(position==-1)
 					break;
-				scrambled=scrambled.substring(0,position)+alphabet.substring(randomInt,randomInt+1)+scrambled.substring(position+1);
+				scrambled=scrambled.substring(0,position)+alphabet2.substring(randomInt,randomInt+1)+scrambled.substring(position+1);
 				position++;
 
 			}
+			alphabet2=alphabet2.substring(0, randomInt)+alphabet2.substring(randomInt+1);
+			randomNumberMultiplier--;
 		}
-
+		
 	}
-	// replaces swaps letters in scrambled if your guess is correct
+	public void makePlaceHolder(){
+		String alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		for(int i=0;i<placeHolder.length();i++){
+			if(alphabet.contains(placeHolder.substring(i, i+1)))
+				placeHolder=placeHolder.substring(0,i)+"*"+placeHolder.substring(i+1);
+		}
+	}
 	public void replace(String oldLetter, String guess){
-		//Search Scrambled for String a to find the position of it. 
+		//Search Scrambled for String a to find the position of it.
 		//Then Search the original for String b. If the position returned is the same
 		// then the guess is correct
 		//if the guess is correct, continue with else clause that replaces
 		// letters
-		if(search(scrambled,oldLetter,0)!=search(original,guess,0)){
+		if(scrambled.indexOf(oldLetter,0)!=original.indexOf(guess,0)){
 			System.out.println("That is not the correct. Try again");
 		}
 		else{
 			int position=0;
 			while(original.length()>position){
-				position=search(original,guess,position);
+				position=original.indexOf(guess,position);
 				if(position==-1)
 					break;
-				scrambled=scrambled.substring(0,position)+guess+scrambled.substring(position+1);
+				placeHolder=placeHolder.substring(0,position)+guess+placeHolder.substring(position+1);
 				position++;
 			}
 		}
 
 
 	}
-	// This may be redundant but I am using it to find the position in the string of certain letters.
-	// 
-	public int search(String searchedWord, String letter,int pos){
-		int newPosition=searchedWord.indexOf(letter, pos);
-		return newPosition; 
-	}
-
 	//returns original phrase
 	public String getOriginal(){
 		return original;	
@@ -78,5 +78,7 @@ public class cryptogram {
 		return scrambled;
 
 	}
-
+	public String getPlaceHolder(){
+		return placeHolder;
+	}
 }
